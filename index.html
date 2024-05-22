@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type="text"], input[type="date"] {
+            width: calc(50% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .task-item button {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Планировщик</h1>
+        <input type="date" id="plannerDate">
+        <button onclick="createPlanner()">Создать планировщик</button>
+    </div>
+
+    <script>
+        var plannerCount = 0;
+
+        function createPlanner() {
+            plannerCount++;
+            var plannerDate = document.getElementById("plannerDate").value;
+            var plannerId = "planner" + plannerCount;
+            var container = document.createElement("div");
+            container.className = "container";
+            container.id = plannerId;
+            container.innerHTML = `
+                <h1>Планировщик ${plannerCount}</h1>
+                <input type="text" id="taskInput${plannerCount}" placeholder="Добавить задачу...">
+                <input type="time" id="taskTime${plannerCount}">
+                <button onclick="addTask('${plannerId}', ${plannerCount})">Добавить</button>
+                <ul class="task-list" id="taskList${plannerCount}"></ul>
+            `;
+            document.body.appendChild(container);
+        }
+
+        function addTask(plannerId, plannerNumber) {
+            var input = document.getElementById("taskInput" + plannerNumber);
+            var taskText = input.value.trim();
+            var taskTime = document.getElementById("taskTime" + plannerNumber).value;
+            if (taskText !== "") {
+                var taskList = document.getElementById("taskList" + plannerNumber);
+                var li = document.createElement("li");
+                li.className = "task-item";
+                li.innerHTML = taskText + ' - ' + taskTime + '<button onclick="removeTask(this)">Удалить</button>';
+                taskList.appendChild(li);
+                input.value = "";
+            }
+        }
+
+        function removeTask(button) {
+            var li = button.parentElement;
+            li.parentElement.removeChild(li);
+        }
+    </script>
+</body>
+</html>
